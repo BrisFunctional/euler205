@@ -1,4 +1,3 @@
-from pprint import pprint
 import itertools
 
 PYRAMID = [range(1, 5)] * 9
@@ -16,38 +15,14 @@ for p in pyramid_combs:
 for p in cubic_combs:
     d_cub[sum(p)] += 1
 
-pprint(d_cub)
-pprint(d_pyr)
+tot_cube = 4**9
+tot_pyr = 6**6
 
-tot_cube = sum(d_pyr.values())
+prob_cube_winning = 0
 
-min_kc = min(d_cub)
-prob = 0
+for k, v in d_pyr.iteritems():
+    event_prob = float(sum([y for x, y in d_cub.iteritems() if x < k])) / tot_pyr
+    tot_prob = (event_prob * v) / tot_cube
+    prob_cube_winning += tot_prob
 
-for kp in sorted(d_pyr):
-    greater = 0
-    for kc in range(min_kc, kp):
-        greater += d_cub[kc]
-
-    prob += float(greater) / tot_cube
-
-
-print(prob)
-
-import matplotlib.pyplot as plt
-
-ls_cub = []
-for k, v in d_cub.items():
-    ls_cub += [k] * v
-
-ls_pyr = []
-for k, v in d_pyr.items():
-    ls_pyr += [k] * v
-
-plt.title("cubic")
-plt.hist(ls_cub, bins=range(36))
-plt.show()
-
-plt.title("pyramid")
-plt.hist(ls_pyr, bins=range(36))
-plt.show()
+print prob_cube_winning
